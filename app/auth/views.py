@@ -3,20 +3,34 @@ from flask.ext.login import login_user, logout_user, login_required, \
     current_user
 from . import auth
 from .. import db
-from ..models import Student
+from ..models import User
 from .forms import LoginForm, RegistrationForm
-
 
 
 @auth.route('/login',methods=['GET','POST'])
 def login():
 	form = LoginForm()
 	if form.validate_on_submit():
-		stu = Student.query.filter_by(sno=form.sno.data).first()
-		if stu is not None and stu.verify_password(form.password.data):
-			login_user(stu, form.remember_me.data)
-			return redirect(request.args.get('next') or url_for('main.index'))
-		flash('Invalid sno or password.')
+		if form.select.data=='Teacher':
+			user = User.query.filter_by(no=form.no.data,permission=1).first()
+			if user is not None and user.verify_password(form.password.data):
+				login_user(user,form.remember_me.data)
+				return redirect(request.args.get('next') or url_for('main.index'))
+			flash('Invalid tno or password')
+			flash("Register if you are first here.")			
+		if form.select.data=='Student':
+			user = User.query.filter_by(no=form.no.data,permission=2).first()
+			if user is not None and user.verify_password(form.password.data):
+				login_user(user, form.remember_me.data)
+				return redirect(request.args.get('next') or url_for('main.index'))
+			flash('Invalid sno or password.')
+			flash("Register if you are first here.")
+		if form.select.data == 'Administrator':
+			user = User.query.filter_by(no=form.no.data,permission=0).first()
+			if user is not None and user.verify_password(form.password.data):
+				login_user(user, form.remember_me.data)
+				return redirect(request.args.get('next') or url_for('admin.index'))
+			flash('Invalid adminno or password.')
 	return render_template('auth/login.html', form=form)
 
 
@@ -30,11 +44,28 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        stu = Student.query.filter_by(sno=form.sno.data).first()
-        if stu is not None:
-        	stu.password=form.password.data
-        	flash('You can now login.')
-        return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
+	form = RegistrationForm()
+	if form.validate_on_submit():
+		if form.tstype.data:
+			user = User.query.filter_by(no=form.no.data,permission=1).first()
+			if user is not None:
+				if user.password_hash:
+					flash('This teacher has already registered.')
+				else:
+					user.password=form.password.data
+					flash('You can now login.')
+					return redirect(url_for('auth.login'))
+			else:
+				flash('No such teacher in collage.')
+		else:
+			user = User.query.filter_by(no=form.no.data).first()
+			if user is not None:
+				if user.password_hash:
+					flash('This student has already registered.')
+				else:
+					user.password=form.password.data
+					flash('You can now login.')
+					return redirect(url_for('auth.login'))
+			else:
+				flash('No such student in collage.')
+	return render_template('auth/register.html', form=form)

@@ -1,0 +1,189 @@
+  {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}CS - Admin{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Hello, {% if current_user.is_authenticated %}{{ current_user.name }}{% else %}Stranger{% endif %}!</h1>
+</div>
+
+<html>
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+body {
+	background-color: #efefef;
+}
+#TabMain {
+	height: 500px;
+	margin: 0 auto;
+}
+.tabItemContainer {
+	width: 10%;
+	height: 500px;
+	float: left;
+}
+.tabBodyContainer {
+	width: 85%;
+	height: 500px;
+	float: left;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 0 5px 5px 0;
+	-moz-border-radius: 0 5px 5px 0;
+	border-radius: 0 5px 5px 0;
+	margin-left: 1px;
+}
+.tabItemContainer>li {
+	list-style: none;
+	text-align: center;
+}
+.tabItemContainer>li>a {
+	float: left;
+	width: 100%;
+	padding: 30px 0 30px 0;
+	font: 16px "微软雅黑", Arial, Helvetica, sans-serif;
+	color: #808080;
+	cursor: pointer;
+	text-decoration: none;
+	border:1px solid transparent;
+}
+.tabItemCurrent {
+	background-color: #fff;
+	border: 1px solid #ccc !important;
+	border-right: 1px solid #fff !important;
+	position: relative;
+	-webkit-border-radius: 5px 0 0 5px;
+	-moz-border-radius: 5px 0 0 5px;
+	border-radius: 5px 0 0 5px;
+}
+.tabItemContainer>li>a:hover {
+	color: #333;
+}
+.tabBodyItem {
+	position: absolute;
+	width: 677px;
+	height: 500px;
+	display: none;
+}
+.tabBodyItem>p {
+	font: 13px "微软雅黑", Arial, Helvetica, sans-serif;
+	text-align: center;
+	margin-top: 30px;
+}
+.tabBodyItem>p>a {
+	text-decoration: none;
+	color: #0F3;
+}
+.tabBodyCurrent{
+	display:block;
+}
+.button{
+	margin-left:100px;
+}
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:600;
+	color:#333333;
+	margin-top: 30px;
+	margin-left:  50px;
+}
+table.gridtable th {
+	width: 300px;
+	padding: 8px;
+	background-color: #efefef;
+}
+table.gridtable td {
+	width: 300px;
+	padding: 8px;
+	background-color: #ffffff;
+}
+</style>
+</head>
+
+<body>
+<div id="TabMain">
+	<div class="tabItemContainer">
+		<li><a class="tabItemCurrent">Students</a></li>
+		<li><a>Teachers</a></li>
+		<li><a>Courses</a></li>
+		<li><a>Add</a></li>
+	</div>
+	<div class="tabBodyContainer">
+		<div class="tabBodyItem tabBodyCurrent">
+		<form action="" method="post" name="stuform">
+			<table class="gridtable">
+				<tr>
+  					<th >Number</th>
+  					<th >Name</th>
+				</tr>
+				 {% for student in studentsform.users %}
+				<tr>
+ 					<td >{{student.no}}</td>
+					<td>{{student.username}}</td>
+					<td><input type="button" value='修改' ></td>
+				  </tr>
+				  {% endfor %}
+				  <form action='' method="post" name="stuadd">
+				   <tr>
+				   	<td><input type="text" id="sno" name="sno" /></td>
+				   	<td><input type="text" id="sname" name="sname"></td>
+				   </tr>
+				</table>
+				<input type="submit" name="addstu" value="add" class='button'>
+				</form>
+		</form>
+		</div>
+		<div class="tabBodyItem">
+		<form action="" method="post" name="teaform">
+			<table class="gridtable" >
+				<tr>
+  					<th >Number</th>
+  					<th >Name</th>
+				</tr>
+				 {% for teacher in teachersform.users %}
+				<tr>
+ 					<td >{{teacher.no}}</td>
+					<td >{{teacher.username}}</td>
+				</tr>
+				{% endfor %}
+				 <form action='' method="post" name="teaadd">
+				   <tr>
+				   	<td><input type="text" id="tno" name="tno" /></td>
+				   	<td><input type="text" id="tname" name="tname"></td>
+				   </tr>
+				</table>
+				<input type="submit" name="addtea" value="add" class='button'>
+				</form>
+		</div>
+		<div class="tabBodyItem">
+			<p>我是Tab选项卡3的内容</p>
+			<p></p>
+		</div>
+		<div class="tabBodyItem" >
+							
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+<script type="text/javascript" src="http://www.pengyaou.com/jquery-1.4.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+	SidebarTabHandler.Init();
+});
+var SidebarTabHandler={
+	Init:function(){
+		$(".tabItemContainer>li").click(function(){
+			$(".tabItemContainer>li>a").removeClass("tabItemCurrent");
+			$(".tabBodyItem").removeClass("tabBodyCurrent");
+			$(this).find("a").addClass("tabItemCurrent");
+			$($(".tabBodyItem")[$(this).index()]).addClass("tabBodyCurrent");
+		});
+	}
+}
+</script>
+</html>
+{% endblock %}
