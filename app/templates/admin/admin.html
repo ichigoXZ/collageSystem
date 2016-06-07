@@ -13,7 +13,7 @@
 <meta charset="utf-8">
 <style type="text/css">
 body {
-	background-color: #efefef;
+	background-color: #ffffff;
 }
 #TabMain {
 	height: 500px;
@@ -26,10 +26,10 @@ body {
 }
 .tabBodyContainer {
 	width: 85%;
-	height: 500px;
+	height: 100%;
 	float: left;
 	background-color: #fff;
-	border: 1px solid #ccc;
+
 	-webkit-border-radius: 0 5px 5px 0;
 	-moz-border-radius: 0 5px 5px 0;
 	border-radius: 0 5px 5px 0;
@@ -63,7 +63,7 @@ body {
 }
 .tabBodyItem {
 	position: absolute;
-	width: 677px;
+	width: 900px;
 	height: 500px;
 	display: none;
 }
@@ -79,8 +79,8 @@ body {
 .tabBodyCurrent{
 	display:block;
 }
-.button{
-	margin-left:100px;
+.button2{
+	margin-left: 10px;
 }
 table.gridtable {
 	font-family: verdana,arial,sans-serif;
@@ -90,12 +90,12 @@ table.gridtable {
 	margin-left:  50px;
 }
 table.gridtable th {
-	width: 300px;
+	width: 400px;
 	padding: 8px;
 	background-color: #efefef;
 }
 table.gridtable td {
-	width: 300px;
+	width: 400px;
 	padding: 8px;
 	background-color: #ffffff;
 }
@@ -108,58 +108,86 @@ table.gridtable td {
 		<li><a class="tabItemCurrent">Students</a></li>
 		<li><a>Teachers</a></li>
 		<li><a>Courses</a></li>
-		<li><a>Add</a></li>
 	</div>
 	<div class="tabBodyContainer">
 		<div class="tabBodyItem tabBodyCurrent">
-		<form action="" method="post" name="stuform">
 			<table class="gridtable">
 				<tr>
   					<th >Number</th>
   					<th >Name</th>
 				</tr>
-				 {% for student in studentsform.users %}
+				 {% for student in students%}
+				 <form action="" method="post" name="studentform">
 				<tr>
- 					<td >{{student.no}}</td>
-					<td>{{student.username}}</td>
-					<td><input type="button" value='修改' ></td>
+ 					<td ><input type='text' value='{{student.no}}' name='no'></td>
+					<td><input type="text" value="{{student.name}}" name='name'></td>
+					<td><input id="{{student.no}}" type="button" value='delete' onclick="deletes(this);">
+					<input id="{{student.no}}" type="button" value='reset' onclick="resets(this);">
+					<input type='submit' name="update" value='update'>
+					<input type="hidden" value={{student.id}} name='id'>
+					</td>
 				  </tr>
-				  {% endfor %}
+				  </form>
+				  {% endfor %}			  
 				  <form action='' method="post" name="stuadd">
 				   <tr>
-				   	<td><input type="text" id="sno" name="sno" /></td>
+				   	<td><input type="text" id="sno" name="sno" ></td>
 				   	<td><input type="text" id="sname" name="sname"></td>
+				   	<td><input type="submit" name="addstu" value="add"></td>
 				   </tr>
 				</table>
-				<input type="submit" name="addstu" value="add" class='button'>
 				</form>
-		</form>
 		</div>
 		<div class="tabBodyItem">
-		<form action="" method="post" name="teaform">
 			<table class="gridtable" >
 				<tr>
   					<th >Number</th>
   					<th >Name</th>
 				</tr>
-				 {% for teacher in teachersform.users %}
+				{% for teacher in teachers%}
+				<form action="" method="post" name="teacherform">
 				<tr>
- 					<td >{{teacher.no}}</td>
-					<td >{{teacher.username}}</td>
+ 					<td ><input type='text' value='{{teacher.no}}' name='tno'></td>
+					<td><input type="text" value="{{teacher.name}}" name='tname'></td>
+					<td><input id="{{teacher.no}}" type="button" value='delete' onclick="deletet(this);">
+					<input id="{{teacher.no}}" type="button" value='reset' onclick="resets(this);">
+					<input type='submit' name="update" value='update'>
+					<input type="hidden" value={{teacher.id}} name='id'>
 				</tr>
-				{% endfor %}
+				</form>
+			{% endfor %}
 				 <form action='' method="post" name="teaadd">
 				   <tr>
-				   	<td><input type="text" id="tno" name="tno" /></td>
+				   	<td><input type="text" id="tno" name="tno" ></td>
 				   	<td><input type="text" id="tname" name="tname"></td>
+				   	<td><input type="submit" name="addtea" value="add"></td>
 				   </tr>
+				   </form>
 				</table>
-				<input type="submit" name="addtea" value="add" class='button'>
-				</form>
 		</div>
 		<div class="tabBodyItem">
-			<p>我是Tab选项卡3的内容</p>
-			<p></p>
+			<table class="gridtable" >
+				<tr>
+  					<th >Name</th>
+  					<th >Credit Hour</th>
+  					<th>Teacher</th>
+				</tr>
+				{% for tc in ltc %}
+				<form action="" method="post" name="teacherform">
+				<tr height=100px>
+ 					<td >{{tc['cname']}}</td>
+					<td>{{tc['chour']}}</td>
+					<td>{{tc['teachers']}}</td>
+				</tr>
+				</form>	
+				{% endfor%}	
+					<tr><div class="col-md-3">
+				{{ wtf.quick_form(addcourseform) }}
+				<br>=======================
+				{{ wtf.quick_form(addteachform) }}
+				</div>	</tr>
+				</table>
+
 		</div>
 		<div class="tabBodyItem" >
 							
@@ -185,5 +213,22 @@ var SidebarTabHandler={
 	}
 }
 </script>
+<script type="text/javascript">
+	function deletes(th){
+	var bid=th.id
+	window.location.href="deletes/"+bid
+}
+	function deletet(th){
+	var bid=th.id
+	window.location.href="deletet/"+bid
+}
+	function resets(th){
+	var bid=th.id
+	window.location.href="resets/"+bid
+}
+	function resett(th){
+	var bid=th.id
+	window.location.href="resett/"+bid
+}</script>
 </html>
 {% endblock %}

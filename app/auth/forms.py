@@ -8,7 +8,7 @@ from ..models import User
 class LoginForm(Form):
     no = StringField('Number',validators=[Required()])
     password = PasswordField('Password', validators=[Required()])
-    select = SelectField('身份', choices=[('Student','Student'), ('Teacher', 'Teacher'),('Administrator','Administrator')], validators=[Required()])
+    select = SelectField('身份', choices=[('Student','Student'), ('Teacher', 'Teacher'),('Administrator','Administrator')])
     remember_me = BooleanField('Keep me logged in')    
     submit = SubmitField('Log In')
 
