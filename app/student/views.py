@@ -73,7 +73,7 @@ def lesson(user):
 			total_score += l.grade*c.credithour
 			chour += c.credithour
 		if chour != 0:
-			student.grade = total_score/chour
+			student.grade = round(total_score/chour,2)
 		else:
 			student.grade = 0
 		db.session.add(student)

@@ -98,7 +98,7 @@ def grade(user,lessonid):
 			else:
 				task_score += g.grade
 				task_num += 1
-		learn.grade =  (test_score*teach.weigh/test_num + task_score*(100-teach.weigh)/task_num)/100
+		learn.grade =  round((test_score*teach.weigh/test_num + task_score*(100-teach.weigh)/task_num)/100,3)
 		db.session.add(learn)
 		db.session.commit()
 		student = User.query.filter_by(no=learn.no).first()
