@@ -1,8 +1,11 @@
 from flask import render_template, redirect, request, url_for, flash
+from flask.ext.login import login_user, logout_user, login_required, \
+    current_user
 from . import teacher
 from .. import db
 from ..models import User,Course,Teach,Learn,Task,Grade
 from .forms import taskForm
+from ..decorators import teacher_required
 
 @teacher.route('/teacher/<userno>',methods=['GET','POST'])
 @login_required
@@ -86,12 +89,16 @@ def grade(user,lessonid):
 	for learn in learns:
 		test_score = 0
 		task_score = 0
+		test_num = 0
+		task_num = 0
 		for g,t in db.session.query(Grade,Task).filter(Grade.taskid==Task.id,Grade.no==learn.no,Task.lesson==lessonid).all():
 			if t.test == True:
 				test_score += g.grade
+				test_num += 1
 			else:
 				task_score += g.grade
-		learn.grade =  (test_score*teach.weigh + task_score*(100-teach.weigh))/100
+				task_num += 1
+		learn.grade =  (test_score*teach.weigh/test_num + task_score*(100-teach.weigh)/task_num)/100
 		db.session.add(learn)
 		db.session.commit()
 		student = User.query.filter_by(no=learn.no).first()

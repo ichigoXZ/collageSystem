@@ -1,7 +1,10 @@
 from flask import render_template, redirect, request, url_for, flash
+from flask.ext.login import login_user, logout_user, login_required, \
+    current_user
 from . import student
 from .. import db
 from ..models import User,Course,Teach,Learn,Grade
+from ..decorators import student_required
 
 @student.route('/student/<userno>',methods=['GET','POST'])
 @login_required
@@ -69,7 +72,10 @@ def lesson(user):
 							Teach.cname==Course.cname):
 			total_score += l.grade*c.credithour
 			chour += c.credithour
-		student.grade = total_score/chour
+		if chour != 0:
+			student.grade = total_score/chour
+		else:
+			student.grade = 0
 		db.session.add(student)
 		db.session.commit()
 		return redirect(request.args.get('next') or url_for('student.lesson',user=user))

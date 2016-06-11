@@ -43,7 +43,7 @@ class User(UserMixin,db.Model):
         return True
 
     def can(self,permission):
-        if self.permission<permission:
+        if self.permission<=permission:
             return True
         else:
             return False

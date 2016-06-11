@@ -12,24 +12,34 @@ def login():
 	if form.validate_on_submit():
 		if form.select.data=='Teacher':
 			user = User.query.filter_by(no=form.no.data,permission=1).first()
-			if user is not None and user.verify_password(form.password.data):
-				login_user(user,form.remember_me.data)
-				return redirect(request.args.get('next') or url_for('teacher.user',userno=current_user.no))
-			flash('Invalid tno or password')
-			flash("Register if you are first here.")			
+			if user is not None:
+				if user.password_hash is None:
+					flash('Please register first.')
+					return redirect(request.args.get('next') or url_for('auth.login'))
+				elif user.verify_password(form.password.data):
+					login_user(user, form.remember_me.data)
+					return redirect(request.args.get('next') or url_for('teacher.user',userno=current_user.no))
+			flash('Invalid teacher number or password')
 		if form.select.data=='Student':
 			user = User.query.filter_by(no=form.no.data,permission=2).first()
-			if user is not None and user.verify_password(form.password.data):
-				login_user(user, form.remember_me.data)
-				return redirect(request.args.get('next') or url_for('student.user',userno=current_user.no))
-			flash('Invalid sno or password.')
-			flash("Register if you are first here.")
+			if user is not None:
+				if user.password_hash is None:
+					flash('Please register first.')
+					return redirect(request.args.get('next') or url_for('auth.login'))
+				elif user.verify_password(form.password.data):
+					login_user(user, form.remember_me.data)
+					return redirect(request.args.get('next') or url_for('student.user',userno=current_user.no))
+			flash('Invalid student number or password.')
 		if form.select.data == 'Administrator':
 			user = User.query.filter_by(no=form.no.data,permission=0).first()
-			if user is not None and user.verify_password(form.password.data):
-				login_user(user, form.remember_me.data)
-				return redirect(request.args.get('next') or url_for('admin.index'))
-			flash('Invalid adminno or password.')
+			if user is not None:
+				if user.password_hash is None:
+					flash('Please register first.')
+					return redirect(request.args.get('next') or url_for('auth.login'))
+				elif user.verify_password(form.password.data):
+					login_user(user, form.remember_me.data)
+					return redirect(request.args.get('next') or url_for('admin.index'))
+			flash('Invalid admin number or password.')
 	return render_template('auth/login.html', form=form)
 
 

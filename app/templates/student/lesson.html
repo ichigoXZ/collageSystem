@@ -38,17 +38,18 @@ table.gridtable td {
    		<th>Teacher</th>
    		<th>学分</th></tr>
    		{%for choice in choices%}
+          <form action='' method="POST">
    		<tr><td>{{choice.cname}}</td>
    		<td>{{choice.tname}}</td>
    		<td>{{choice.chour}}</td> 
-              <td> <form action='' method="POST">
-              <input type="hidden" value={{choice.id}} name='id'>
+              <td> 
+              <input type="hidden" value={{choice['id']}} name='id'>
               {% if choice.choosed%}
               <input type="submit" name='lesson' value='delete'>
               {%else%}  
               <input type='submit' name="lesson" value="choose">
-               </form>
                {%endif%}</td>
+               </form>
         </tr>
    		{%endfor%}
    	</table>

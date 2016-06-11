@@ -78,6 +78,7 @@ def index():
 		t = Teach.query.filter_by(id = request.form['id']).first()
 		db.session.delete(t)
 		db.session.commit()
+		return redirect(request.args.get('next') or url_for('admin.index'))
 
 
 	addcourseform = AddCourseForm()	
@@ -140,9 +141,8 @@ def resets(value):
 @login_required
 @admin_required
 def resett(value):
-	db.session.execute("PRAGMA foreign_keys=ON")
 	u = User.query.filter_by(no=value,permission=1).first()
-	db.session.password='111'
+	u.password='111'
 	db.session.add(u)
 	db.session.commit()
 	flash("has reset.")
