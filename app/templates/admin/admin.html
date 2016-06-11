@@ -108,6 +108,7 @@ table.gridtable td {
 		<li><a class="tabItemCurrent">Students</a></li>
 		<li><a>Teachers</a></li>
 		<li><a>Courses</a></li>
+		<li><a>Manage</a></li>
 	</div>
 	<div class="tabBodyContainer">
 		<div class="tabBodyItem tabBodyCurrent">
@@ -147,10 +148,10 @@ table.gridtable td {
 				{% for teacher in teachers%}
 				<form action="" method="post" name="teacherform">
 				<tr>
- 					<td ><input type='text' value='{{teacher.no}}' name='tno'></td>
-					<td><input type="text" value="{{teacher.name}}" name='tname'></td>
+ 					<td ><input type='text' value='{{teacher.no}}' name='no'></td>
+					<td><input type="text" value="{{teacher.name}}" name='name'></td>
 					<td><input id="{{teacher.no}}" type="button" value='delete' onclick="deletet(this);">
-					<input id="{{teacher.no}}" type="button" value='reset' onclick="resets(this);">
+					<input id="{{teacher.no}}" type="button" value='reset' onclick="resett(this);">
 					<input type='submit' name="update" value='update'>
 					<input type="hidden" value={{teacher.id}} name='id'>
 				</tr>
@@ -173,25 +174,63 @@ table.gridtable td {
   					<th>Teacher</th>
 				</tr>
 				{% for tc in ltc %}
-				<form action="" method="post" name="teacherform">
 				<tr height=100px>
  					<td >{{tc['cname']}}</td>
 					<td>{{tc['chour']}}</td>
 					<td>{{tc['teachers']}}</td>
+					 <td> <form action='' method="POST">
+            				  <input type="hidden" value={{tc['cname']}} name='id'>
+              			<input type="submit" name='delete' value='delete'>
+            				   </form>
 				</tr>
-				</form>	
-				{% endfor%}	
+				{% endfor%}
 					<tr><div class="col-md-3">
 				{{ wtf.quick_form(addcourseform) }}
 				<br>=======================
 				{{ wtf.quick_form(addteachform) }}
-				</div>	</tr>
+					</div></tr>
 				</table>
 
 		</div>
-		<div class="tabBodyItem" >
-							
-			</div>
+		<div class="tabBodyItem">
+			<table class="gridtable" >
+				<tr>
+  					<th >Course Name</th>
+  					<th >Credithour</th>
+  					<th></th>
+				</tr>
+				{% for course in courses%}
+				<form action='' method='POST'>
+				<tr>
+ 					<td ><input type='text' value='{{course.cname}}' name='cname'></td>
+					<td><input type="text" value="{{course.credithour}}" name='credithour'></td>
+					<td><input type='submit' name='course' value='update'>
+					<input type="hidden" value={{course.id}} name='id'></td>
+				</tr>
+				</form>
+				{% endfor %}
+				</table>
+				<br>
+				<br>
+				<table class="gridtable" >
+				<tr>
+  					<th >Course Name</th>
+  					<th >Teacher Number</th>
+  					<th></th>
+				</tr>
+				{% for teach in teachs%}
+				<form action="" method="post">
+				<tr>
+ 					<td >{{teach.cname}}</td>
+					<td>{{teach.no}}</td>
+					<td>
+					<input type='submit' name='teach' value="delete">
+					<input type="hidden" value={{teach.id}} name='id'></td>
+				</tr>
+				</form>
+				{% endfor %}
+				</table>
+		</div>
 		</div>
 	</div>
 </div>

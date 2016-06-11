@@ -1,0 +1,57 @@
+  {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}CS - Student{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Long live Long learn,{{ current_user.name }} </h1>
+    <p>ID: {{current_user.no}}</p>
+</div>
+
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:600;
+	color:#333333;
+	margin-top: 30px;
+	margin-left:  20px;
+}
+table.gridtable th {
+	width: 400px;
+	padding: 8px;
+	background-color: #efefef;
+}
+table.gridtable td {
+	width: 400px;
+	padding: 8px;
+	background-color: #ffffff;
+}
+</style>
+</head>
+
+<div>
+   	<table class='gridtable'>
+   		<tr><th>Course</th>
+   		<th>Teacher</th>
+   		<th>学分</th></tr>
+   		{%for choice in choices%}
+   		<tr><td>{{choice.cname}}</td>
+   		<td>{{choice.tname}}</td>
+   		<td>{{choice.chour}}</td> 
+              <td> <form action='' method="POST">
+              <input type="hidden" value={{choice.id}} name='id'>
+              {% if choice.choosed%}
+              <input type="submit" name='lesson' value='delete'>
+              {%else%}  
+              <input type='submit' name="lesson" value="choose">
+               </form>
+               {%endif%}</td>
+        </tr>
+   		{%endfor%}
+   	</table>
+     <p>Finished choosed? <a href="{{ url_for('student.user',userno=current_user.no) }}">Click here to return</a>.</p>
+    </div>
+{% endblock %} 

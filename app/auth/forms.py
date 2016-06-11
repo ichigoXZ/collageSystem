@@ -20,17 +20,9 @@ class RegistrationForm(Form):
     tstype = BooleanField('Teacher or not')
     submit = SubmitField('Register')
 
-    '''
-    def validate_no(self, field):
-      stu = Student.query.filter_by(sno=field.data).first()
-      if stu:
-        if stu.password_hash:
-          raise ValidationError('This Student has already registered.')
-        else:
-          tea = Teacher.query.filter_by(tno=field.data).first()
-          if tea:
-            if tea.password_hash:
-              raise ValidationError('This teacher has already registered.')
-          else:
-            raise ValidationError('No such people in collage.')
-    '''
+class ChangePasswordForm(Form):
+    old_password = PasswordField('Old password', validators=[Required()])
+    password = PasswordField('New password', validators=[
+        Required(), EqualTo('password2', message='Passwords must match')])
+    password2 = PasswordField('Confirm new password', validators=[Required()])
+    submit = SubmitField('Update Password')

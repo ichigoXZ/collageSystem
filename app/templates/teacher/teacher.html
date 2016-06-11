@@ -1,0 +1,23 @@
+  {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}CS - Teacher{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>こんにちは,{{ user.name }} 先生</h1>
+    <p>ID: {{user.no}}</p>
+</div>
+<p>>>My Lesson>>></p>
+
+<div>
+<ul>
+<form>
+    {% for tea in teach %}
+        <li> <h2><a href="{{ url_for('teacher.task',user=user.no,lessonid=tea.id)}}">{{tea.cname}}</a>
+            </h2></li>
+     {% endfor %}
+    </form>
+    </ul>
+    </div>
+{% endblock %} 

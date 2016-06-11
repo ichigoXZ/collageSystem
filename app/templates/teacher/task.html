@@ -1,0 +1,90 @@
+ {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}CS - Teacher{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+<h1>TASK</h1>
+</div>
+
+<head>
+<meta charset="utf-8">
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:600;
+	color:#333333;
+	margin-top: 30px;
+	margin-left:  50px;
+}
+table.gridtable th {
+	width: 400px;
+	padding: 8px;
+	background-color: #efefef;
+}
+table.gridtable td {
+	width: 400px;
+	padding: 8px;
+	background-color: #ffffff;
+}
+.left {
+	margin-left: 50px
+}
+</style>
+</head>
+
+<div>
+<div>
+	<table class="gridtable">
+	<tr><td>
+	<form action='' method="post" name="addtest">
+	添加一次考试:<input type="submit" name="add test" value="add test">
+	</form></td>
+	<td><form action='' method="post" name="addtask">
+	添加一次作业:<input type="submit" name="add task" value="add task">
+	</form></td>
+	</tr>
+	</table><p><form action='' method="post" >
+	<label class='left'>考试占比</label> 
+	<input type="text" name="percent" value="{{teach.weigh}}">%
+	<input type="submit" name='set' value="set">
+	</p>
+	</form >
+	<p class='left' style="font-size:80%">
+	=====共{{ll}}次考试，{{tl}}次作业=====</p>
+	<form action='' method="post">
+	<table class="gridtable">
+		<tr><th>Student</th>
+		<th>Score</th></tr>
+		{% for grade in grades %}
+		<tr><td>{{grade.no}}</td>
+		<td>{% if view %}<input type='float' name='{{grade.no}}' value="{{grade.grade}}">
+		{% else %}<input type='float' name='{{grade.no}}'>{%endif%}</td></tr>
+		{% endfor %}
+	</table>
+	<br><br>
+		<select name="task" class='left'>
+			{% for task in tasks %}
+			<option value="{{task.id}}">第{{loop.index}}次{%if task.test %}任务:考试{%else%}任务:作业{%endif%}</option>
+			{% endfor %}
+		</select>
+		<input type="submit" value='set' name="submit">
+		<input type="submit" value='view' name="submit">
+	</form>
+</div>
+<div>
+	<h3 class="left">>>>Total Score>>></h3>
+	<table class="gridtable">
+		<tr><th>Student</th>
+		<th>Total Score</th></tr>
+		{% for learn in learns %}
+		<tr><td>{{learn.no}}</td>
+		<td>{{learn.grade}}</td></tr>
+		{% endfor %}
+	</table>
+	<br>
+	<br>
+	<br>
+</div>
+{% endblock %} 
