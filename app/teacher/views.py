@@ -98,7 +98,14 @@ def grade(user,lessonid):
 			else:
 				task_score += g.grade
 				task_num += 1
-		learn.grade =  round((test_score*teach.weigh/test_num + task_score*(100-teach.weigh)/task_num)/100,3)
+		if test_num != 0 and task_num != 0:
+			learn.grade =  round((test_score*teach.weigh/test_num + task_score*(100-teach.weigh)/task_num)/100,3)
+		elif test_num ==0 and task_num != 0:
+			learn.grade =  round((task_score/task_num),3)
+		elif test_num != 0 and task_num==0:
+			learn.grade =  round((test_score/test_num),3)
+		else:
+			learn.grade = 0
 		db.session.add(learn)
 		db.session.commit()
 		student = User.query.filter_by(no=learn.no).first()
