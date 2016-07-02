@@ -83,6 +83,7 @@ def index():
 
 	addcourseform = AddCourseForm()	
 	if addcourseform.validate_on_submit():
+		db.session.execute("PRAGMA foreign_keys=ON")
 		c = Course(cname=addcourseform.cname.data,credithour=addcourseform.credithour.data)
 		db.session.add(c)
 		db.session.commit()
@@ -146,4 +147,26 @@ def resett(value):
 	db.session.add(u)
 	db.session.commit()
 	flash("has reset.")
+	return redirect(request.args.get('next') or url_for('admin.index'))
+
+@admin.route("/grade/<course>")
+@login_required
+@admin_required
+def grade(course):
+	teachs = Teach.query.filter_by(cname=course).all()
+	for teach in teachs:
+		learns = Learn.query.filter_by(lesson=teach.id)
+		for learn in learns:
+			student = User.query.filter_by(no=learn.no).first()
+			total_score = 0
+			chour = 0
+			for l,t,c in db.session.query(Learn,Teach,Course).filter(Learn.no == student.no,
+							Learn.lesson==Teach.id,
+							Teach.cname==Course.cname):
+				if l.grade!=0:
+					total_score += l.grade*c.credithour
+					chour += c.credithour
+			student.grade = total_score/chour
+			db.session.add(student)
+			db.session.commit()
 	return redirect(request.args.get('next') or url_for('admin.index'))

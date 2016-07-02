@@ -91,7 +91,8 @@ def grade(user,lessonid):
 		task_score = 0
 		test_num = 0
 		task_num = 0
-		for g,t in db.session.query(Grade,Task).filter(Grade.taskid==Task.id,Grade.no==learn.no,Task.lesson==lessonid).all():
+		for g,t in db.session.query(Grade,Task).filter(Grade.taskid==Task.id,
+			Grade.no==learn.no,Task.lesson==lessonid).all():
 			if t.test == True:
 				test_score += g.grade
 				test_num += 1
@@ -105,7 +106,7 @@ def grade(user,lessonid):
 		elif test_num != 0 and task_num==0:
 			learn.grade =  round((test_score/test_num),3)
 		else:
-			learn.grade = 0
+			learn.grade = 0 
 		db.session.add(learn)
 		db.session.commit()
 		student = User.query.filter_by(no=learn.no).first()
@@ -114,8 +115,9 @@ def grade(user,lessonid):
 		for l,t,c in db.session.query(Learn,Teach,Course).filter(Learn.no == student.no,
 							Learn.lesson==Teach.id,
 							Teach.cname==Course.cname):
-			total_score += l.grade*c.credithour
-			chour += c.credithour
+			if l.grade!=0:
+				total_score += l.grade*c.credithour
+				chour += c.credithour
 		student.grade = total_score/chour
 		db.session.add(student)
 		db.session.commit()

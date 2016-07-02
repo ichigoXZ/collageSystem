@@ -24,7 +24,8 @@ def user(userno):
 		stuviewline['cname'] = teachlearn.cname
 		course = Course.query.filter_by(cname=teachlearn.cname).first()
 		stuviewline['chour'] = course.credithour
-		total_credit += course.credithour
+		if learn.grade!=0:
+			total_credit += course.credithour
 		stuview.append(stuviewline)
 
 	if 'submit' in request.form and request.method=='POST':
@@ -70,8 +71,9 @@ def lesson(user):
 		for l,t,c in db.session.query(Learn,Teach,Course).filter(Learn.no == student.no,
 							Learn.lesson==Teach.id,
 							Teach.cname==Course.cname):
-			total_score += l.grade*c.credithour
-			chour += c.credithour
+			if l.grade!=0:
+				total_score += l.grade*c.credithour
+				chour += c.credithour
 		if chour != 0:
 			student.grade = round(total_score/chour,2)
 		else:
